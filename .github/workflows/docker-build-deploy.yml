@@ -63,7 +63,7 @@ jobs:
           NODE_VERSION: "${{ inputs.NODE_VERSION }}"
 
       - name: docker prepate
-        uses: bitbool-actions/actions-docker-prepare@main
+        uses: bitbool-actions/docker-prepare@main
         id: docker_prepare
         with:
           DOCKER_REGISTRY: "${{ inputs.DOCKER_REGISTRY }}"
@@ -79,7 +79,7 @@ jobs:
           context: .
           tags: ${{ steps.docker_prepare.outputs.tags }}
         
-      - uses: athenarc/actions-docker-compose-deploy@master
+      - uses: bitbool-actions/docker-compose-deploy@master
         id: docker_deploy
         with:
           AUTH_TOKEN: "${{ inputs.AUTH_TOKEN }}"
