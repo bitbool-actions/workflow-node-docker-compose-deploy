@@ -6,23 +6,31 @@ on:
       USE_YARN:
         required: false
         default: "true"
+        type: string
       NODE_VERSION:
         required: true
+        type: string
       CI:
         required: false
         default: "true"     
+        type: string
       DOCKER_REPO:
          required: true
+         type: string
       DOCKER_REGISTRY:
         required: false
         default: "registry.hub.docker.com"
+        type: string
       DOCKER_USER:
         required: true
+        type: string
       QEMU_SETUP:
         required: false
         default: "true"
+        type: string
       DOCKER_PASSWORD:
         required: true
+        type: string
       DEPLOY_URL: 
         required: false
         default: "INVALID"        
@@ -33,7 +41,7 @@ on:
         default: "false"
       AUTH_TOKEN:
         required: true
-        
+        type: string
 jobs:
   node_build:
     name: "build node docker image and deploy"
