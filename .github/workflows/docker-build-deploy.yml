@@ -78,6 +78,7 @@ jobs:
         with:
           context: .
           tags: ${{ steps.docker_prepare.outputs.tags }}
+          push: true
         
       - uses: bitbool-actions/docker-compose-deploy@master
         id: docker_deploy
