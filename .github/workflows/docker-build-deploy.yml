@@ -28,9 +28,6 @@ on:
         required: false
         default: "true"
         type: string
-      DOCKER_PASSWORD:
-        required: true
-        type: string
       DEPLOY_URL: 
         required: false
         default: "INVALID"        
@@ -39,9 +36,12 @@ on:
         required: false
         type: string        
         default: "false"
+    secrets:
+      DOCKER_PASSWORD:
+        required: true
       AUTH_TOKEN:
         required: true
-        type: string
+        
 jobs:
   node_build:
     name: "build node docker image and deploy"
@@ -82,7 +82,7 @@ jobs:
       - uses: bitbool-actions/docker-compose-deploy@master
         id: docker_deploy
         with:
-          AUTH_TOKEN: "${{ inputs.AUTH_TOKEN }}"
+          AUTH_TOKEN: "${{ secrets.AUTH_TOKEN }}"
           USE_PULL_REPO: "${{ inputs.USE_PULL_REPO }}"
           DEPLOY_URL: "${{ inputs.DEPLOY_URL }}"
           IMAGES: "${{ steps.docker_build.outputs.images_with_tags }}"
