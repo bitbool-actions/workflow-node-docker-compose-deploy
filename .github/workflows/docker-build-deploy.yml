@@ -86,4 +86,4 @@ jobs:
           AUTH_TOKEN: "${{ secrets.AUTH_TOKEN }}"
           USE_PULL_REPO: "${{ inputs.USE_PULL_REPO }}"
           DEPLOY_URL: "${{ inputs.DEPLOY_URL }}"
-          IMAGES: "${{ steps.docker_build.outputs.images_with_tags }}"
+          IMAGES: "${{ steps.docker_prepare.outputs.images_with_tags }}"
