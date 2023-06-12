@@ -1,0 +1,79 @@
+name: build and deploy node
+
+on:
+  workflow_call:
+    inputs:
+      USE_YARN:
+        required: false
+        default: "true"
+      NODE_VERSION:
+        required: true
+      CI:
+        required: false
+        default: "true"     
+      DOCKER_REPO:
+         required: true
+      DOCKER_REGISTRY:
+        required: false
+        default: "registry.hub.docker.com"
+      DOCKER_USER:
+        required: true
+      QEMU_SETUP:
+        required: false
+        default: "true"
+      DOCKER_PASSWORD:
+        required: true
+      DEPLOY_URL: 
+        required: false
+        default: "INVALID"        
+        type: string
+      USE_PULL_REPO:
+        required: false
+        type: string        
+        default: "false"
+      AUTH_TOKEN:
+        required: true
+        
+  jobs:
+  node_build:
+    name: "build node docker image and deploy"
+    concurrency: 
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+   
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: node build
+        uses: bitbool-actions/node-build@main
+        id: node_build
+        with:
+          USE_YARN: "${{ inputs.USE_YARN }}"
+          CI: "${{ inputs.CI }}"
+          NODE_VERSION: "${{ inputs.NODE_VERSION }}"
+
+      - name: docker prepate
+        uses: bitbool-actions/actions-docker-prepare@main
+        id: docker_prepare
+        with:
+          DOCKER_REGISTRY: "${{ inputs.DOCKER_REGISTRY }}"
+          DOCKER_REPO: "${{ inputs.DOCKER_REPO }}"
+          QEMU_SETUP: "${{ inputs.QEMU_SETUP }}"
+          DOCKER_USER: "${{ inputs.DOCKER_USER }}"
+          DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          tags: ${{ steps.docker_prepare.outputs.tags }}
+        
+      - uses: athenarc/actions-docker-compose-deploy@master
+        id: docker_deploy
+        with:
+          AUTH_TOKEN: "${{ inputs.AUTH_TOKEN }}"
+          USE_PULL_REPO: "${{ inputs.USE_PULL_REPO }}"
+          DEPLOY_URL: "${{ inputs.DEPLOY_URL }}"
+          IMAGES: "${{ steps.docker_build.outputs.images_with_tags }}"
