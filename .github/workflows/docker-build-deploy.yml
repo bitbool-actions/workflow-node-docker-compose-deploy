@@ -51,14 +51,16 @@ jobs:
     runs-on: [ubuntu-latest] 
    
     steps:
-      
+        
+      - uses: actions/checkout@v3
+
       - name: read env
         shell: bash
         run: |
           ([ -f ".github/envs/all" ] && cat ".github/envs/all" >> $GITHUB_ENV) || true
           ([ -f ".github/envs/${{ github.ref_name }}" ] && cat ".github/envs/${{ github.ref_name }}" >> $GITHUB_ENV) || true
-          
-      - uses: actions/checkout@v3
+          env
+
 
       - name: node build
         uses: bitbool-actions/node-build@master
