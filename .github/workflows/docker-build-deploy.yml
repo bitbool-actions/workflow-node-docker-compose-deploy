@@ -55,8 +55,8 @@ jobs:
       - name: read env
         shell: bash
         run: |
-          [ -f ".github/envs/all" ] && cat ".github/envs/all" >> $GITHUB_ENV
-          [ -f ".github/envs/${{ github.ref_name }}" ] && cat ".github/envs/${{ github.ref_name }}" >> $GITHUB_ENV
+          ([ -f ".github/envs/all" ] && cat ".github/envs/all" >> $GITHUB_ENV) || true
+          ([ -f ".github/envs/${{ github.ref_name }}" ] && cat ".github/envs/${{ github.ref_name }}" >> $GITHUB_ENV) || true
           
       - uses: actions/checkout@v3
 
