@@ -51,7 +51,13 @@ jobs:
     runs-on: [ubuntu-latest] 
    
     steps:
-
+      
+      - name: read env
+        shell: bash
+        run: |
+          [ -f ".github/envs/all" ] && cat ".github/envs/all" >> $GITHUB_ENV
+          [ -f ".github/envs/${{ github.ref_name }}" ] && cat ".github/envs/${{ github.ref_name }}" >> $GITHUB_ENV
+          
       - uses: actions/checkout@v3
 
       - name: node build
