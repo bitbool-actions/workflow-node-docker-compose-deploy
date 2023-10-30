@@ -36,6 +36,10 @@ on:
         required: false
         type: string        
         default: "false"
+      USE_ENV_FILES: 
+        required: false
+        default: "true"        
+        type: string             
     secrets:
       DOCKER_PASSWORD:
         required: true
@@ -54,13 +58,17 @@ jobs:
         
       - uses: actions/checkout@v3
 
-      - name: read env
+      - name: Read env
+        uses: bitbool-actions/read-env@main
+        id: read_env
+        with:
+          USE_ENV_FILES: "${{ inputs.USE_ENV_FILES }}"
+
+      - name: set deploy url env var from input
         shell: bash
         run: |
-          ([ -f ".github/envs/all" ] && cat ".github/envs/all" >> $GITHUB_ENV) || true
-          ([ -f ".github/envs/${{ github.ref_name }}" ] && cat ".github/envs/${{ github.ref_name }}" >> $GITHUB_ENV) || true
-          env
-
+          echo DEPLOY_URL=${{ inputs.DEPLOY_URL }} >> $GITHUB_ENV
+        if: ${{ inputs.DEPLOY_URL != 'INVALID' }}
 
       - name: node build
         uses: bitbool-actions/node-build@master
